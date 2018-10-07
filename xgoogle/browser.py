@@ -86,8 +86,7 @@ class Browser(object):
 
         try:
             response = opener.open(url)
-            result = response.read()
-            return result
+            return response.read()
         except (urllib2.HTTPError, urllib2.URLError), e:
             raise BrowserError(url, str(e))
         except (socket.error, socket.sslerror), msg:
