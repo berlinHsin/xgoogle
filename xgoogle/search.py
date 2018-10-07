@@ -205,7 +205,6 @@ class GoogleSearch(object):
             page = self.browser.get_page(safe_url)
         except BrowserError, e:
             raise SearchError, "Failed getting %s: %s" % (e.url, e.error)
-
         return BeautifulSoup(page)
 
     def _extract_info(self, soup):
@@ -226,7 +225,7 @@ class GoogleSearch(object):
         return {'from': int(matches.group(1)), 'to': int(matches.group(2)), 'total': int(matches.group(3))}
 
     def _extract_results(self, soup):
-        results = soup.findAll('li', {'class': 'g'})
+        results = soup.findAll('div', {'class': 'g'})
         ret_res = []
         for result in results:
             eres = self._extract_result(result)
@@ -237,7 +236,8 @@ class GoogleSearch(object):
     def _extract_result(self, result):
         title, url = self._extract_title_url(result)
         desc = self._extract_description(result)
-        if not title or not url or not desc:
+        desc = desc is None and desc or ""
+        if not title or not url :
             return None
         return SearchResult(title, url, desc)
 

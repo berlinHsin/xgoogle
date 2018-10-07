@@ -81,13 +81,13 @@ class Browser(object):
         self.debug = debug
 
     def get_page(self, url, data=None):
-        handlers = [PoolHTTPHandler]
-        opener = urllib2.build_opener(*handlers)
-        if data: data = urllib.urlencode(data)
-        request = urllib2.Request(url, data, self.headers)
+        opener = urllib2.build_opener()
+        opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+
         try:
-            response = opener.open(request)
-            return response.read()
+            response = opener.open(url)
+            result = response.read()
+            return result
         except (urllib2.HTTPError, urllib2.URLError), e:
             raise BrowserError(url, str(e))
         except (socket.error, socket.sslerror), msg:
